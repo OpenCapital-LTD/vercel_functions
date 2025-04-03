@@ -108,13 +108,15 @@ export default async function handler(req, res) {
       const {
         p, u
       } = req.query
-
+      if(!p || !u)return res.status(400).json({
+        error:'invalide request'
+      })
       try {
         const connection = await mysql.createConnection(dbUrl);
-        const [rows] = await connection.execute('SELECT * FROM Results WHERE puzzle=? AND name=?', {
+        const [rows] = await connection.execute('SELECT * FROM Results WHERE puzzle=? AND name=?', [
           p,
           u
-        });
+        ]);
         await connection.end();
         res.status(200).json(rows);
 
